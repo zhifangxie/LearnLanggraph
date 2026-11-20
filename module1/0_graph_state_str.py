@@ -6,7 +6,7 @@ from langgraph.graph import StateGraph, START, END
 # nodes
 def greeting(state: str) -> str:
     """this function greets people to ACL"""
-    return state + "welcome to AI Career Lab!"
+    return state + " welcome to AI Career Lab!"
 
 # edges
 
@@ -20,6 +20,7 @@ builder.add_node("greeting", greeting)
 builder.add_edge(START, "greeting")
 builder.add_edge("greeting", END)
 
+# Compile graph
 graph = builder.compile()
 
 # print(graph.invoke("hey am new!"))
