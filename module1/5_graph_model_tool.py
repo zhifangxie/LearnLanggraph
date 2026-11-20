@@ -40,3 +40,4 @@ messages = graph.invoke({"messages": [
 ]})
 
 print(messages["messages"][-1].tool_calls) # print tool_call details including the tool name, arguments, id and type.
+print(messages["messages"][-1].content)  # Empty string
