@@ -8,13 +8,14 @@ load_dotenv()
 
 model_llm = ChatOpenAI(model="gpt-4o")
 
-
+# Functional docstring: the tool's description that gets sent to the LLM so it knows when and how to call the tool.
 @tool
 def multiply(nb1: int, nb2: int) -> int:
     """This tool is used for multiplying 2 numbers and returning the product"""
     return nb1 * nb2
 
-
+# Bind the tool to the LLM so that it can call the tool when needed. 
+# The LLM will decide when to call the tool based on the input it receives and the tool's description.
 model_llm_with_tool = model_llm.bind_tools([multiply])
 
 

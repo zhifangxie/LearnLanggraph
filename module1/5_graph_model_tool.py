@@ -39,5 +39,8 @@ messages = graph.invoke({"messages": [
     HumanMessage(content="What is 2 * 2?")
 ]})
 
-print(messages["messages"][-1].tool_calls) # print tool_call details including the tool name, arguments, id and type.
+# .tool_calls returns a list of tool_calls
+# print tool_call details including the tool name, arguments, id and type.
+print(messages["messages"][-1].tool_calls[0]) # print tool_call details in dict form: {'name': 'multiply', 'args': {'nb1': 2, 'nb2': 2}, 'id': 'call_sR0YRjlcy1tKKizD7aRPtudA', 'type': 'tool_call'}
+
 print(messages["messages"][-1].content)  # Empty string
