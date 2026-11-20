@@ -45,7 +45,7 @@ messages = graph.invoke({"messages": [
     HumanMessage(content="What is 2 * 2?")
 ]})
 
-breakpoint()
+print(messages["messages"][-1].content)  # should print "4"
 
 """
 def tool_node(state: MessagesState) -> MessagesState:
