@@ -2,18 +2,21 @@ from dotenv import load_dotenv
 from langchain.tools import tool
 from langchain_openai import ChatOpenAI
 from langgraph.graph import END, START, MessagesState, StateGraph
+from langchain_core.messages import HumanMessage, SystemMessage
 
 load_dotenv()
 
 model_llm = ChatOpenAI(model="gpt-4o")
 
 
+# Functional docstring: the tool's description that gets sent to the LLM so it knows when and how to call the tool.
 @tool
 def multiply(nb1: int, nb2: int) -> int:
     """This tool is used for multiplying 2 numbers and returning the product"""
     return nb1 * nb2
 
-
+# Bind the tool to the LLM so that it can call the tool when needed. 
+# The LLM will decide when to call the tool based on the input it receives and the tool's description.
 model_llm_with_tool = model_llm.bind_tools([multiply])
 
 
@@ -30,3 +33,10 @@ builder.add_edge(START, "chat_with_tool")
 builder.add_edge("chat_with_tool", END)
 
 graph = builder.compile()
+
+messages = graph.invoke({"messages": [
+    SystemMessage(content="You are a Python assistant."),
+    HumanMessage(content="What is 2 * 2?")
+]})
+
+print(messages["messages"][-1].tool_calls) # print tool_call details including the tool name, arguments, id and type.
