@@ -1,12 +1,14 @@
 # importing our lib
-from langgraph.graph import StateGraph, START, END
+from langgraph.graph import END, START, StateGraph
 
 # State
+
 
 # nodes
 def greeting(state: str) -> str:
     """this function greets people to ACL"""
     return state + " welcome to AI Career Lab!"
+
 
 # edges
 

@@ -12,3 +12,8 @@ dependencies = [
     "langgraph>=1.2.11",
     "langgraph-cli[inemem,inmem]>=0.4.31",
 ]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.17.6",
+]

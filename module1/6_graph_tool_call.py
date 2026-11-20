@@ -1,24 +1,27 @@
-from langgraph.graph import StateGraph, START, END, MessagesState
-from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 from langchain.tools import tool
+from langchain_openai import ChatOpenAI
+from langgraph.graph import END, START, MessagesState, StateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
-
 
 load_dotenv()
 
 model_llm = ChatOpenAI(model="gpt-4o")
 
+
 @tool
 def multiply(nb1: int, nb2: int) -> int:
     """This tool is used for multiplying 2 numbers and returning the product"""
-    return nb1*nb2
+    return nb1 * nb2
+
 
 model_llm_with_tool = model_llm.bind_tools([multiply])
+
 
 # nodes
 def chat_with_tool(state: MessagesState) -> MessagesState:
     return {"messages": [model_llm_with_tool.invoke(state["messages"])]}
+
 
 builder = StateGraph(MessagesState)
 
@@ -27,10 +30,9 @@ builder.add_node("tools", ToolNode([multiply]))
 
 builder.add_edge(START, "chat_with_tool")
 builder.add_conditional_edges("chat_with_tool", tools_condition)
-builder.add_edge("tools",END)
+builder.add_edge("tools", END)
 
 graph = builder.compile()
-
 
 
 """
