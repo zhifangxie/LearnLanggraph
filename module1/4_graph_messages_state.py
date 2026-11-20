@@ -13,8 +13,10 @@ load_dotenv()
 
 # state: add_messages merges current messages with new messages
 # Optional class definition
+"""
 class MessagesState(TypedDict):
     messages: Annotated[List[AnyMessage], add_messages]
+"""
 
 model_llm = ChatOpenAI(model="gpt-4o")
 
