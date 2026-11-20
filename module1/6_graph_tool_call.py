@@ -2,6 +2,8 @@ from dotenv import load_dotenv
 from langchain.tools import tool
 from langchain_openai import ChatOpenAI
 from langgraph.graph import END, START, MessagesState, StateGraph
+from langchain_core.messages import HumanMessage, SystemMessage
+
 from langgraph.prebuilt import ToolNode, tools_condition
 
 load_dotenv()
@@ -27,14 +29,23 @@ def chat_with_tool(state: MessagesState) -> MessagesState:
 builder = StateGraph(MessagesState)
 
 builder.add_node("chat_with_tool", chat_with_tool)
+
+# Tool node appends a ToolMessage with the tool's response (content) and tool's name, id and tool_call_id
 builder.add_node("tools", ToolNode([multiply]))
 
 builder.add_edge(START, "chat_with_tool")
+# Conditional edges: if the LLM requests a tool, go to the tool node; otherwise, go to the end node.
 builder.add_conditional_edges("chat_with_tool", tools_condition)
 builder.add_edge("tools", END)
 
 graph = builder.compile()
 
+messages = graph.invoke({"messages": [
+    SystemMessage(content="You are a Python assistant."),
+    HumanMessage(content="What is 2 * 2?")
+]})
+
+breakpoint()
 
 """
 def tool_node(state: MessagesState) -> MessagesState:
@@ -46,8 +57,8 @@ def tool_node(state: MessagesState) -> MessagesState:
                                       tool_call_id=tool_call["id"])]}
 
 
-# creating condinial edges logic
-def should_continue(state: MessagesState) -> Literal["tool_node", "__end__"]:
+# creating conditional edges logic
+def should_continue(state: MessagesState) -> Literal["tool_node", END]:
 
     last_message = state["messages"][-1]
 
@@ -55,5 +66,5 @@ def should_continue(state: MessagesState) -> Literal["tool_node", "__end__"]:
     if last_message.tool_calls:
         return "tool_node"
 
-    return "__end__"
+    return END
 """
