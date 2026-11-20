@@ -20,7 +20,7 @@ def node3(state: State)->State:
     """this node greet our user"""
     return {"graph_str": state["graph_str"] + "I am in Node 3"}
 
-# edges
+# edges do not change state, they just guide the graph to next node
 def next_step(state: State) -> Literal["node2", "node3"]:
     """guide the state/graph to next node"""
     state_str = state["graph_str"]
@@ -44,4 +44,8 @@ builder.add_conditional_edges("node1", next_step)
 builder.add_edge("node2", END)
 builder.add_edge("node3", END)
 
+# Compile the graph
 graph = builder.compile()
+
+print(graph.invoke({"graph_str": "hello I am new!"}))
+print(graph.invoke({"graph_str": "hey I am new!"}))
