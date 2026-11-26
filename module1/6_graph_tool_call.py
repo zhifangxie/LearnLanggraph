@@ -28,9 +28,10 @@ def chat_with_tool(state: MessagesState) -> MessagesState:
 
 builder = StateGraph(MessagesState)
 
-builder.add_node("chat_with_tool", chat_with_tool)
+# Appends AI messages (with tool calls if any); .tool_call example: [{'name': 'multiply', 'args': {'nb1': 2, 'nb2': 2}, 'id': 'call_YleWjcZP4kaPV6hKLAcdduYy', 'type': 'tool_call'}]
+builder.add_node("chat_with_tool", chat_with_tool, tool_choice=True)
 
-# Tool node appends a ToolMessage with the tool's response (content) and tool's name, id and tool_call_id
+# Tool node appends a ToolMessage; example: (content='4', name='multiply', id='ef1bbd45-037b-4263-8c12-a7d0618f8911', tool_call_id='call_YleWjcZP4kaPV6hKLAcdduYy')
 builder.add_node("tools", ToolNode([multiply]))
 
 builder.add_edge(START, "chat_with_tool")
@@ -41,9 +42,10 @@ builder.add_edge("tools", END)
 graph = builder.compile()
 
 messages = graph.invoke({"messages": [
-    SystemMessage(content="You are a Python assistant."),
+    SystemMessage(content="You are a Python assistant.Always provide reasoning before each tool call."),
     HumanMessage(content="What is 2 * 2?")
 ]})
+
 
 print(messages["messages"][-1].content)  # should print "4"
 
