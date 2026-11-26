@@ -8,7 +8,8 @@
     "4_graph": "./module1/4_graph_messages_state.py:graph",
     "5_graph": "./module1/5_graph_model_tool.py:graph",
     "6_graph": "./module1/6_graph_tool_call.py:graph",
-    "8_graph": "./module1/8_graph_agent.py:graph"
+    "8_graph": "./module1/8_graph_agent.py:graph",
+    "9_graph": "./module1/9_graph_agent_memory.py:graph"
   },
   "env": ".env"
 }
